@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { clearUser } from "@features/user/userSlice"; // ודא שהנתיב נכון
+import { clearUser } from "@features/user/userSlice";
 
 const Logout = () => {
     const navigate = useNavigate();

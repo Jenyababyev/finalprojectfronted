@@ -6,7 +6,6 @@ interface Product {
     name: string;
     description: string;
     price: number;
-    image: string;
 }
 
 const ProductDetail = () => {
@@ -35,10 +34,9 @@ const ProductDetail = () => {
     return (
         <div>
             <h2>{product.name}</h2>
-            <img src={product.image} alt={product.name} />
             <p>{product.description}</p>
             <p>Price: ${product.price}</p>
-            <button onClick={() => window.history.back()}>go back</button>
+            <button onClick={() => window.history.back()}>Go Back</button>
         </div>
     );
 };

@@ -1,4 +1,3 @@
-// src/components/AdminProduct.tsx
 import React, { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 import { fetchProducts, addProduct, deleteProduct } from '@features/product/productsSlice';

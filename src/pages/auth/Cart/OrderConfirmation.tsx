@@ -6,9 +6,8 @@ import type { RootState } from 'store';
 const OrderConfirmation = () => {
     const navigate = useNavigate();
 
-    // נניח שיש לך ב-state.orders את רשימת ההזמנות
+    // state.orders  רשימת ההזמנות
     const orders = useSelector((state: RootState) => state.orders.orders);
-    // או אם יש state.orders.lastOrder או משהו כזה לפי איך שהגדרת
     // const lastOrder = useSelector((state: RootState) => state.orders.lastOrder);
 
     // מקבלים את ההזמנה האחרונה לפי תאריך יצירה

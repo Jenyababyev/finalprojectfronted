@@ -16,8 +16,12 @@ const ProductList = () => {
 
     useEffect(() => {
         fetch('http://localhost:3000/api/products')
-            .then(res => res.json())
-            .then(data => setProducts(data));
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch products');
+                return res.json();
+            })
+            .then(data => setProducts(data))
+            .catch(err => console.error(err.message));
     }, []);
 
     const handleAddToCart = (product: Product) => {

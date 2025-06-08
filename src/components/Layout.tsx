@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link } from 'react-router';
 import style from './Layout.module.css';
 import type { RootState } from '../store';
-
+//
 const Layout = () => {
     const user = useSelector((state: RootState) => state.user.user);
 
@@ -39,7 +39,7 @@ const Layout = () => {
             </nav>
 
             <main>
-                <h1>React Shop</h1>
+                <h1>Babyev Phone Shop</h1>
                 <Outlet />
             </main>
         </>

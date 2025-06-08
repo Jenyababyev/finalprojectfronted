@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router';
-
 import Login from './pages/auth/Login';
 import Logout from './pages/auth/Logout';
 import Register from './pages/auth/Register';
