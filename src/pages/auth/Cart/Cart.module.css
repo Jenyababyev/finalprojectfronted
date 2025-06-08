@@ -1,0 +1,41 @@
+.cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%
+}
+
+.cartList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cartItem {
+    display: flex;
+    justify-content: center;
+    width: 100%
+}
+
+.cartTitle {
+    text-align: center;
+}
+
+.cartTotal {
+    text-align: center;
+}
+
+.cartButton {
+    text-align: center;
+}
+
+.checkoutButton {
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

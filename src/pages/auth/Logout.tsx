@@ -1,33 +1,40 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@features/user/userSlice"; // ודא שהנתיב נכון
 
-export const Logout = () => {
+const Logout = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const logoutUser = async () => {
             try {
-                // קריאה ל-API לlogout
-                await axios.post("/api/logout", {}, { withCredentials: true });
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
 
-                // כאן אפשר לנקות כל מצב לוקאלי (לדוגמה localStorage)
-                localStorage.removeItem("userInfo");
+                // ניקוי המשתמש גם מה-localStorage וגם מה-Redux
+                localStorage.removeItem('userInfo');
+                dispatch(clearUser());
 
-                // מעבר לעמוד Login עם החלפה ב-history (replace)
-                navigate("/login", { replace: true });
+                navigate('/login', { replace: true });
             } catch (error) {
-                console.error("Logout failed:", error);
+                console.error('Logout failed:', error);
             }
         };
 
         logoutUser();
-    }, [navigate]);
+    }, [navigate, dispatch]);
 
     return (
         <div>
             <h1>Logging out...</h1>
-            <p>If you are not redirected, <button onClick={() => navigate("/login")}>Click here</button></p>
+            <p>
+                If you are not redirected,{" "}
+                <button onClick={() => navigate("/login")}>Click here</button>
+            </p>
         </div>
     );
 };

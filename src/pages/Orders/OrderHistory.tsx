@@ -1,66 +1,54 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-interface Product {
-    _id: string;
-    name: string;
-    price: number;
-}
-
-interface OrderItem {
-    product: Product;
-    quantity: number;
-}
-
-interface Order {
-    _id: string;
-    createdAt: string;
-    items: OrderItem[];
-    total: number;
-}
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import type { RootState, AppDispatch } from 'store';
+import { fetchOrders } from '@features/orders/ordersSlice';
+import style from './OrderHistory.module.css';
 
 const OrderHistory = () => {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+
+    const { orders, loading, error } = useSelector((state: RootState) => state.orders);
+    const { user } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await axios.get<Order[]>('http://localhost:3000/api/orders', {
-                    withCredentials: true,
-                });
-                setOrders(response.data);
-            } catch (err) {
-                setError('Error fetching orders');
-                console.error('Error fetching orders', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchOrders();
-    }, []);
+        if (!user) {
+            navigate('/login');
+        } else {
+            dispatch(fetchOrders());
+        }
+    }, [dispatch, navigate, user]);
 
+    if (!user) return null;
     if (loading) return <p>Loading orders...</p>;
     if (error) return <p>{error}</p>;
     if (orders.length === 0) return <p>No orders found.</p>;
 
+    const sortedOrders = [...orders].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
     return (
-        <div>
-            <h2>Order History</h2>
-            <ul>
-                {orders.map((order) => (
-                    <li key={order._id}>
+        <div className={style.orderHistory}>
+            <h2 className={style.orderHistoryTitle}>Order History</h2>
+            <ul className={style.orderHistoryList}>
+                {sortedOrders.map((order) => (
+                    <li className={style.orderHistoryItem} key={order._id}>
                         <p>Order ID: {order._id}</p>
                         <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                        <ul>
-                            {order.items.map((item) => (
-                                <li key={item.product._id}>
-                                    {item.product.name} - Quantity: {item.quantity} - Price: ${item.product.price}
-                                </li>
-                            ))}
-                        </ul>
-                        <h3>Total: ${order.total}</h3>
+
+                        <div className={style.orderItemsWrapper}>
+                            <ul className={style.orderItemsList}>
+                                {order.items.map((item, index) => (
+                                    <li key={`${order._id}-${index}`}>
+                                        <span>{item.name}</span> — Quantity: {item.quantity} — Price: ${item.price}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <h3 className={style.orderHistoryTotal}>Total: ${order.total}</h3>
                     </li>
                 ))}
             </ul>

@@ -1,6 +1,6 @@
 import axios from 'axios'
-
-const API_URL = 'http://localhost:3000/api/auth' // הכתובת של ה־API בשרת
+// כתובת ה־API
+const API_URL = 'http://localhost:3000/api/auth' 
 
 // רשום משתמש חדש
 export const registerUser = async (username: string, email: string, password: string) => {

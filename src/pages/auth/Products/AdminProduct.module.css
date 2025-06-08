@@ -1,0 +1,142 @@
+.adminProduct {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 30px;
+    background-color: #f4f6f8;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* כותרת ראשית */
+.adminProduct h2 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+/* כותרת משנית */
+.adminProduct h3 {
+    font-size: 26px;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* טופס הוספת מוצר */
+.adminProductForm {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+/* שדה יחיד */
+.adminProductForm div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* תוויות שדות */
+.adminProductForm label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+/* קלטים */
+.adminProductForm input,
+.adminProductForm textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    resize: vertical;
+}
+
+
+.adminProductForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* כפתור שליחה */
+
+
+
+/* רשימת המוצרים */
+.adminProductList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* פריט בודד ברשימה */
+.adminProductListItem {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.adminProductListItem:hover {
+    transform: translateY(-4px);
+}
+
+.adminProductListItem strong {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.adminProductListItem p {
+    color: #555;
+    margin: 6px 0 0 0;
+}
+
+/* כפתור מחיקה */
+.adminDeleteButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.adminDeleteButton:hover {
+    background-color: #c0392b;
+}
+
+/* רספונסיביות */
+@media (max-width: 600px) {
+    form {
+        padding: 20px;
+    }
+
+    .adminDeleteButton {
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+    }
+}

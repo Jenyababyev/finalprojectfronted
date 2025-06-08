@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from 'react-router';
 
 interface Product {
     _id: string;
     name: string;
     description: string;
     price: number;
+    image: string;
 }
 
 const ProductDetail = () => {
@@ -17,10 +17,12 @@ const ProductDetail = () => {
         const fetchProduct = async () => {
             if (!id) return;
             try {
-                const res = await axios.get<Product>(`http://localhost:3000/api/products/${id}`, {
-                    withCredentials: true,
+                const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+                    credentials: 'include',
                 });
-                setProduct(res.data);
+                if (!res.ok) throw new Error('Failed to fetch product');
+                const data = await res.json();
+                setProduct(data);
             } catch (err) {
                 console.error('Error fetching product detail', err);
             }
@@ -33,8 +35,10 @@ const ProductDetail = () => {
     return (
         <div>
             <h2>{product.name}</h2>
+            <img src={product.image} alt={product.name} />
             <p>{product.description}</p>
             <p>Price: ${product.price}</p>
+            <button onClick={() => window.history.back()}>go back</button>
         </div>
     );
 };

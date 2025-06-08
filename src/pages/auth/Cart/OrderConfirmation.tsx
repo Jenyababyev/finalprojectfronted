@@ -1,33 +1,52 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import type { RootState } from 'store';
 
 const OrderConfirmation = () => {
-    const [orderDetails, setOrderDetails] = useState<any>(null)
+    const navigate = useNavigate();
+
+    // נניח שיש לך ב-state.orders את רשימת ההזמנות
+    const orders = useSelector((state: RootState) => state.orders.orders);
+    // או אם יש state.orders.lastOrder או משהו כזה לפי איך שהגדרת
+    // const lastOrder = useSelector((state: RootState) => state.orders.lastOrder);
+
+    // מקבלים את ההזמנה האחרונה לפי תאריך יצירה
+    const lastOrder = orders && orders.length > 0
+        ? [...orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+        : null;
 
     useEffect(() => {
-        const lastOrder = JSON.parse(localStorage.getItem('lastOrder') || 'null')
-        setOrderDetails(lastOrder)
-    }, [])
+        if (!lastOrder) {
+            // אם אין הזמנה, נווט לדף אחר (למשל עגלה)
+            navigate('/cart');
+        }
+    }, [lastOrder, navigate]);
+
+    if (!lastOrder) {
+        return <p>Loading...</p>;
+    }
+
+    // חישוב סכום כולל
+    const total = lastOrder.total ?? lastOrder.items.reduce(
+        (acc: number, item: any) => acc + item.price * item.quantity,
+        0
+    );
 
     return (
         <div>
             <h2>Order Confirmation</h2>
-            {orderDetails ? (
-                <>
-                    <p>Order ID: {orderDetails.orderId}</p>
-                    <ul>
-                        {orderDetails.items.map((item: any, index: number) => (
-                            <li key={`${item.name}-${index}`}>
-                                {item.name} - Quantity: {item.quantity} - Price: ${item.price}
-                            </li>
-                        ))}
-                    </ul>
-                    <h3>Total: ${orderDetails.total}</h3>
-                </>
-            ) : (
-                <p>Loading...</p>
-            )}
+            <p>Order ID: {lastOrder._id}</p>
+            <ul>
+                {lastOrder.items.map((item: any, index: number) => (
+                    <li key={`${item.name}-${index}`}>
+                        {item.name} - Quantity: {item.quantity} - Price: ${item.price}
+                    </li>
+                ))}
+            </ul>
+            <h3>Total: ${total}</h3>
         </div>
-    )
-}
+    );
+};
 
-export default OrderConfirmation
+export default OrderConfirmation;

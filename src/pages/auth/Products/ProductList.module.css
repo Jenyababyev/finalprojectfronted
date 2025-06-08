@@ -1,0 +1,34 @@
+.productList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.productListTitle {
+    text-align: center;
+}
+
+.productListItems {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.productListItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.addToCartButton {
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

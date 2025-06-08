@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -7,11 +6,18 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3000/api/register', { name, email, password });
+            const res = await fetch('http://localhost:3000/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (!res.ok) throw new Error('Registration failed');
             alert('Registration successful!');
             navigate('/login');
         } catch (err) {
@@ -19,7 +25,6 @@ const Register = () => {
             alert('Registration failed');
         }
     };
-
     return (
         <div>
             <h2>Register</h2>
@@ -28,6 +33,8 @@ const Register = () => {
                     type="text"
                     placeholder="Name"
                     value={name}
+                    id='name'
+                    name='name'
                     onChange={(e) => setName(e.target.value)}
                     required
                 />
@@ -35,6 +42,8 @@ const Register = () => {
                     type="email"
                     placeholder="Email"
                     value={email}
+                    id='email'
+                    name='email'
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
@@ -42,6 +51,8 @@ const Register = () => {
                     type="password"
                     placeholder="Password"
                     value={password}
+                    id='password'
+                    name='password'
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />

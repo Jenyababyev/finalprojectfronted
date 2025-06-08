@@ -1,46 +1,37 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@features/cart/cartSlice';
+import { Link } from 'react-router';
+import style from './ProductList.module.css';
 
 interface Product {
     _id: string;
     name: string;
-    description: string;
     price: number;
 }
 
 const ProductList = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await axios.get<Product[]>('http://localhost:3000/api/products');
-                setProducts(response.data);
-            } catch (err) {
-                console.error('Error fetching products', err);
-            }
-        };
-        fetchProducts();
+        fetch('http://localhost:3000/api/products')
+            .then(res => res.json())
+            .then(data => setProducts(data));
     }, []);
 
     const handleAddToCart = (product: Product) => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        cart.push({ product, quantity: 1 });
-        localStorage.setItem('cart', JSON.stringify(cart));
+        dispatch(addToCart(product));
     };
 
     return (
-        <div>
-            <h2>Products</h2>
-            <ul>
-                {products.map((product) => (
-                    <li key={product._id}>
-                        <div>
-                            <h3>{product.name}</h3>
-                            <p>{product.description}</p>
-                            <p>${product.price}</p>
-                            <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
-                        </div>
+        <div className={style.productList}>
+            <h2 className={style.productListTitle}>Products</h2>
+            <ul className={style.productListItems}>
+                {products.map(p => (
+                    <li className={style.productListItem} key={p._id}>
+                        <Link to={`/products/${p._id}`}>{p.name}</Link> - ${p.price.toFixed(2)}
+                        <button className={style.addToCartButton} onClick={() => handleAddToCart(p)}>Add to Cart</button>
                     </li>
                 ))}
             </ul>
