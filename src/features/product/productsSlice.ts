@@ -1,4 +1,3 @@
-// src/features/products/productsSlice.ts
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface Product {
@@ -20,9 +19,21 @@ const initialState: ProductsState = {
   error: null,
 };
 
+// Helper function to get auth headers
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token'); 
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { Authorization: `Bearer ${token}` })
+  };
+};
+
 // טענת מוצרים מהשרת
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const res = await fetch('/api/products', { credentials: 'include' });
+  const res = await fetch('/api/products', { 
+    credentials: 'include',
+    headers: getAuthHeaders()
+  });
   if (!res.ok) throw new Error('Failed to fetch products');
   return (await res.json()) as Product[];
 });
@@ -33,7 +44,7 @@ export const addProduct = createAsyncThunk(
   async (product: Omit<Product, '_id'>) => {
     const res = await fetch('/api/products', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify(product),
     });
@@ -48,10 +59,48 @@ export const deleteProduct = createAsyncThunk(
   async (id: string) => {
     const res = await fetch(`/api/products/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
       credentials: 'include',
     });
     if (!res.ok) throw new Error('Failed to delete product');
     return id;
+  }
+);
+
+// עדכון מוצר
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async ({ id, updatedProduct }: { id: string; updatedProduct: Product }, { rejectWithValue }) => {
+    try {
+      console.log('Updating product:', id, updatedProduct);
+      
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(updatedProduct),
+      });
+      
+      console.log('Update response status:', res.status);
+      
+      if (res.status === 401) {
+        return rejectWithValue('Authentication expired. Please log in again.');
+      }
+      
+      if (res.status === 403) {
+        return rejectWithValue('Access denied. Admin privileges required.');
+      }
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ message: 'Unknown error' }));
+        return rejectWithValue(errorData.message || 'Failed to update product');
+      }
+      
+      return (await res.json()) as Product;
+    } catch (error) {
+      console.error('Update product error:', error);
+      return rejectWithValue('Network error. Please try again.');
+    }
   }
 );
 
@@ -90,6 +139,19 @@ const productsSlice = createSlice({
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to delete product';
+      })
+      // updateProduct
+      .addCase(updateProduct.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(updateProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+        const index = state.products.findIndex(p => p._id === action.payload._id);
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.error = action.payload as string || 'Failed to update product';
       });
   },
 });
