@@ -1,7 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
+import type { ReactNode } from 'react';
 
 interface User {
+  [x: string]: ReactNode;
   _id: string;
   name: string;
   role: string;

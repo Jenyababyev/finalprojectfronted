@@ -7,9 +7,11 @@ interface User {
     name: string;
     email: string;
     role: string;
+
 }
 
 const AdminUsers = () => {
+    // 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<User[]>([]);
@@ -102,6 +104,7 @@ const AdminUsers = () => {
                             <td>
                                 {u._id !== user._id && (
                                     <button onClick={() => handleDelete(u._id)}>Delete</button>
+
                                 )}
                             </td>
                         </tr>

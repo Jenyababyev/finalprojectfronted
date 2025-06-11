@@ -28,11 +28,11 @@ const AdminProduct = () => {
             // Update existing product
             const updatedProduct = {
                 ...editingProduct,
-                name: name.trim(),
                 price,
+                name: name.trim(),
                 description: description.trim(),
             };
-            dispatch(updateProductThunk({ id: editingProduct._id, updatedProduct }));
+            dispatch(updateProductThunk({ id: editingProduct._id, updatedProduct: updatedProduct }));
         } else {
             // Add new product
             dispatch(addProduct({ name: name.trim(), price, description: description.trim() }));

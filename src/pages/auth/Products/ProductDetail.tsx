@@ -28,7 +28,7 @@ const ProductDetail = () => {
         };
         fetchProduct();
     }, [id]);
-
+    // בודק אם המוצר קיים
     if (!product) return <p>Loading...</p>;
 
     return (

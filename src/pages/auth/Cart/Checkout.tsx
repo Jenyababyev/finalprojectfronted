@@ -36,7 +36,6 @@ const Checkout = () => {
             if (response.ok) {
                 const data = await response.json();
 
-                // שמירת הפרטים ב-localStorage עם שדות מלאים
                 localStorage.setItem(
                     'lastOrder',
                     JSON.stringify({

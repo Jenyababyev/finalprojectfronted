@@ -6,12 +6,13 @@ import { fetchOrders } from '@features/orders/ordersSlice';
 import style from './OrderHistory.module.css';
 
 const OrderHistory = () => {
+    // שימוש ב-typed hooks במקום useDispatch/useSelector
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-
+    // מקבלים את ההזמנות
     const { orders, loading, error } = useSelector((state: RootState) => state.orders);
     const { user } = useSelector((state: RootState) => state.user);
-
+    // טעינת ההזמנות
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -24,7 +25,7 @@ const OrderHistory = () => {
     if (loading) return <p>Loading orders...</p>;
     if (error) return <p>{error}</p>;
     if (orders.length === 0) return <p>No orders found.</p>;
-
+    // סידור ההזמנות לפי תאריך
     const sortedOrders = [...orders].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
