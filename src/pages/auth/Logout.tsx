@@ -16,7 +16,7 @@ const Logout = () => {
                 });
 
                 // ניקוי המשתמש גם מה-localStorage וגם מה-Redux
-                localStorage.removeItem('userInfo');
+                localStorage.removeItem('user');
                 dispatch(clearUser());
 
                 navigate('/login', { replace: true });

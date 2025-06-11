@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router';
+
 import Login from './pages/auth/Login';
 import Logout from './pages/auth/Logout';
 import Register from './pages/auth/Register';
@@ -14,6 +15,7 @@ import OrderHistory from './pages/Orders/OrderHistory';
 import Layout from './components/Layout';
 import AdminUsers from 'pages/AdminUsers';
 import Error from 'pages/Error';
+import ProtectedRoute from 'components/ProtectedRoute'; // 
 import './App.css';
 
 import { setUser } from '@features/user/userSlice';
@@ -31,17 +33,50 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route path="login" element={<Login />} />
-        <Route path="logout" element={<Logout />} />
-        <Route path="register" element={<Register />} />
-        <Route path="products" element={<ProductList />} />
-        <Route path="products/:id" element={<ProductDetail />} />
-        <Route path="admin/products" element={<AdminProduct />} />
-        <Route path="admin/users" element={<AdminUsers />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="checkout" element={<Checkout />} />
-        <Route path="order-confirmation" element={<OrderConfirmation />} />
-        <Route path="orders" element={<OrderHistory />} />
+        {/* נתיבים ציבוריים */}
+        <Route path="login"
+          element={<Login />} />
+        <Route path="logout"
+          element={<Logout />} />
+        <Route path="register"
+          element={<Register />} />
+        <Route path="products"
+          element={<ProductList />} />
+        <Route path="products/:id"
+          element={<ProductDetail />} />
+        {/* נתיבים שדורשים התחברות */}
+        <Route path="cart" element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        } />
+        <Route path="checkout" element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        } />
+        <Route path="order-confirmation" element={
+          <ProtectedRoute>
+            <OrderConfirmation />
+          </ProtectedRoute>
+        } />
+        <Route path="orders" element={
+          <ProtectedRoute>
+            <OrderHistory />
+          </ProtectedRoute>
+        } />
+        {/* נתיבי אדמין בלבד 🔐 */}
+        <Route path="admin/products" element={
+          <ProtectedRoute requireAdmin={true}>
+            <AdminProduct />
+          </ProtectedRoute>
+        } />
+        <Route path="admin/users" element={
+          <ProtectedRoute requireAdmin={true}>
+            <AdminUsers />
+          </ProtectedRoute>
+        } />
+        {/* נתיב שגיאה */}
         <Route path="*" element={<Error />} />
       </Route>
     </Routes>
